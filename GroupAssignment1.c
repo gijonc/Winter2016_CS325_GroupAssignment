@@ -29,58 +29,64 @@ int main(){
 	int array19[] = {-44, -47, -48, 17, 47, 3, -3, -20, -3, -20, 9, -4, -25, -22, 13, 11, -3, 12, -13, -20, 3};	
 	//**************************************************************************
 
-	int array20[] = {-18, -47, -40, -43, -2, 48, 31, -24, 36, -49, 4, -29, -4, -39, 12, 24, 8, 40, 45, -17, 6, -11, -5, -30, -8, 25, -44, -9, -20, -50, -12, -32, 41, 10, -42, -15, 11, -38, 37, 21, 33, -22, 16, -41, -46, -33, -26, 7, -3, -28, 29, 20, 27, 3, 15, 49, 23, -1, 14, 32, -31, -13, -48, -14, 13, 39, 46, -35, -36, 0, 17, -27, -21, 28, -7, 44, -10, 34, -19, 47, 42, -34, 5, 26, -45, 35, 9, -25, 38, -37, -23, 22, -6, -16, 18, 43, 30, 2, 19, 1};
-
 	int *arrays[19] = {array1, array2, array3, array4, array5, array6, array7, array8, array9, array10, array11, array12, array13, array14, array15, array16, array17, array18, array19};
 
 	double timeElapsed;
 	clock_t start, end;
 
 	int i;					//counter
-	int _arraySize = 0;
+	int _arraySize[19];
+	_arraySize[0] = elementInArray(sizeof(array1), (int)sizeof(int));
+	_arraySize[1] = elementInArray(sizeof(array2), (int)sizeof(int));	
+	_arraySize[2] = elementInArray(sizeof(array3), (int)sizeof(int));	
+	_arraySize[3] = elementInArray(sizeof(array4), (int)sizeof(int));	
+	_arraySize[4] = elementInArray(sizeof(array5), (int)sizeof(int));	
+	_arraySize[5] = elementInArray(sizeof(array6), (int)sizeof(int));	
+	_arraySize[6] = elementInArray(sizeof(array7), (int)sizeof(int));	
+	_arraySize[7] = elementInArray(sizeof(array8), (int)sizeof(int));	
+	_arraySize[8] = elementInArray(sizeof(array9), (int)sizeof(int));	
+	_arraySize[9] = elementInArray(sizeof(array10), (int)sizeof(int));	
+	_arraySize[10] = elementInArray(sizeof(array11), (int)sizeof(int));	
+	_arraySize[11] = elementInArray(sizeof(array12), (int)sizeof(int));	
+	_arraySize[12] = elementInArray(sizeof(array13), (int)sizeof(int));	
+	_arraySize[13] = elementInArray(sizeof(array14), (int)sizeof(int));	
+	_arraySize[14] = elementInArray(sizeof(array15), (int)sizeof(int));	
+	_arraySize[15] = elementInArray(sizeof(array16), (int)sizeof(int));	
+	_arraySize[16] = elementInArray(sizeof(array17), (int)sizeof(int));	
+	_arraySize[17] = elementInArray(sizeof(array18), (int)sizeof(int));		
+	_arraySize[18] = elementInArray(sizeof(array19), (int)sizeof(int));	
 
-	for(i = 0; i < elementInArray(sizeof(arrays), (int)sizeof(int*)); i++){
+	for(i = 0; i < 19; i++){
 		printf("Data set %d:\n", i + 1);
-		_arraySize = elementInArray(sizeof(arrays[i]), (int)sizeof(int));
 		//algorithm 1
 		start = clock();
-		int largest1 = maxArrayWithAlOne(arrays[i], _arraySize);
+		int largest1 = maxArrayWithAlOne(arrays[i], _arraySize[i]);
 		end = clock();
-		timeElapsed = (end - start) * 1000 /CLOCKS_PER_SEC;
-		printf("Time Elapsed: %f\n", timeElapsed);	
+		timeElapsed = (end - start) * 1000 /CLOCKS_PER_SEC;	
 		printf("Max is %d.\n", largest1);
+		printf("Time Elapsed: %f\n", timeElapsed);
 
 		//algorithm 2
 		start = clock();
-		int largest2 = maxArrayWithAlTwo(arrays[i], _arraySize);
+		int largest2 = maxArrayWithAlTwo(arrays[i], _arraySize[i]);
 		end = clock();
 		timeElapsed = (end - start) * 1000 / CLOCKS_PER_SEC;
-		printf("Time Elapsed: %f\n", timeElapsed);
 		printf("Max is %d.\n", largest2);
+		printf("Time Elapsed: %f\n", timeElapsed);
 
-		/*//algorithm 3
+		//algorithm 3
 		start = clock();
-		int mid = _arraySize / 2;
+		int mid = _arraySize[i] / 2;
 		int largest3 = Max(maxArrayWithAlThree(arrays[i], 0, mid), 
-					maxArrayWithAlThree(arrays[i], mid + 1, _arraySize - 1), 
-					crossSum(arrays[i], 0, mid, _arraySize - 1));
+					maxArrayWithAlThree(arrays[i], mid + 1, _arraySize[i] - 1), 
+					crossSum(arrays[i], 0, mid, _arraySize[i] - 1));
 		end = clock();
 		timeElapsed = (end - start) * 1000 / CLOCKS_PER_SEC;
+		printf("Max is %d.\n", largest3);
 		printf("Time Elapsed: %f\n", timeElapsed);	
-		printf("Max is %d.\n", largest3);*/
 		printf("--------------------------------------\n");
 
 	}
-
-	start = clock();
-	int mid = _arraySize / 2;
-	int largest3 = Max(maxArrayWithAlThree(arrays[1], 0, mid), 
-				maxArrayWithAlThree(arrays[1], mid + 1, _arraySize - 1), 
-				crossSum(arrays[1], 0, mid, _arraySize - 1));
-	end = clock();
-	timeElapsed = (end - start) * 1000 / CLOCKS_PER_SEC;
-	printf("Time Elapsed: %f\n", timeElapsed);
-	printf("Max is %d.\n", largest3);	
 
 	return 0;
 }
