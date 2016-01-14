@@ -56,25 +56,37 @@ int main(){
 	_arraySize[17] = elementInArray(sizeof(array18), (int)sizeof(int));		
 	_arraySize[18] = elementInArray(sizeof(array19), (int)sizeof(int));	
 
+	FILE *fp = fopen("results.txt", "w");
+	if(fp != NULL)
+		fprintf(fp, "Algorithm 1: ");
+	else{
+		printf("Fail to create file\n");
+		return 1;
+	}
+	//algorithm 1
 	for(i = 0; i < 19; i++){
-		printf("Data set %d:\n", i + 1);
-		//algorithm 1
 		start = clock();
 		int largest1 = maxArrayWithAlOne(arrays[i], _arraySize[i]);
 		end = clock();
 		timeElapsed = (end - start) * 1000 /CLOCKS_PER_SEC;	
-		printf("Max is %d.\n", largest1);
-		printf("Time Elapsed: %f\n", timeElapsed);
+		fprintf(fp, "%d ", largest1);
+	}
+	fprintf(fp, "\n");
 
-		//algorithm 2
+	//algorithm 2
+	fprintf(fp, "Algorithm 2: ");
+	for(i = 0; i < 19; i++){
 		start = clock();
 		int largest2 = maxArrayWithAlTwo(arrays[i], _arraySize[i]);
 		end = clock();
 		timeElapsed = (end - start) * 1000 / CLOCKS_PER_SEC;
-		printf("Max is %d.\n", largest2);
-		printf("Time Elapsed: %f\n", timeElapsed);
+		fprintf(fp, "%d ", largest2);
+	}
+	fprintf(fp, "\n");
 
-		//algorithm 3
+	//algorithm 3
+	fprintf(fp, "Algorithm 3: ");
+	for(i = 0; i < 19; i++){
 		start = clock();
 		int mid = _arraySize[i] / 2;
 		int largest3 = Max(maxArrayWithAlThree(arrays[i], 0, mid), 
@@ -82,11 +94,10 @@ int main(){
 					crossSum(arrays[i], 0, mid, _arraySize[i] - 1));
 		end = clock();
 		timeElapsed = (end - start) * 1000 / CLOCKS_PER_SEC;
-		printf("Max is %d.\n", largest3);
-		printf("Time Elapsed: %f\n", timeElapsed);	
-		printf("--------------------------------------\n");
-
+		fprintf(fp, "%d ", largest3);
 	}
+	fprintf(fp, "\n");
+	close(fp);
 
 	return 0;
 }
