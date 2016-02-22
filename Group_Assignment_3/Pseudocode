@@ -1,0 +1,81 @@
+Method 1:
+**from the first to the last number in the list of the sums of the suffix list, add them with every number in the list of the sums of the prefix list. Keep the one that's closest to 0.
+
+int methodOne(int suffix[n], int prefix[m]){
+	int temp = 0;
+	int smallest = a number that's far away from 0;
+	for i = 0 -> n-1
+		for j = 0 -> m-1
+			temp = abs(suffix[i] + prefix[j]);
+			if(temp < smallest)
+				smallest = temp;
+
+	return smallest;
+}
+
+run time delta(n^2)
+
+Method 2:
+**sort both lists from smallest to biggest
+**do the same thing that method one does. 
+
+run time delta(n^2)
+
+Method 3:
+**combine the suffix and the negative of prefix into one single array
+**sort the combined array
+**iterate through every pair of numbers
+
+int methodThree(int suffix[n], int prefix[m]){
+	int newArray[n+m]
+	newArray = combine suffix[n] and -prefix[m]
+	sort(newArray)
+
+	for i = 0 -> n+m-1
+		result = keep the smallest abs(newArray[i]+newArray[i+1])
+
+	return result;
+}
+
+run time delta(n+m)
+
+Divide and Conquer pseudocode:
+struct closestToZero{
+	int i;
+	int j;
+	int result;
+}
+
+struct closestToZero find(A[i->j]){
+	struct prefix;
+	struct suffix;
+	struct combine;
+	struct result;
+	int temp;
+
+	if(j-i == 1){
+		temp = abs(A[i] - A[j]);
+		if(temp > abs(A[i]) && temp > abs(A[j])){
+			result.i = i;
+			result.j = j;
+			result.result = temp;
+		}else if(abs(A[i]) > abs(A[j])){
+			result.i = j;
+			result.j = j;
+			result.result = A[j];
+		}else{
+			result.i = i;
+			result.j = i;
+			result.result = A[i];
+		}
+		return result;
+	}
+
+	int divide = (i+j)/2;
+	suffix = find(A[i->divide]);
+	prefix = find(A[divide+1->j]);
+	combine = method(A[0->divide], A[divide+1->n]);
+
+	return min(prefix, suffix, combine);
+}
+
