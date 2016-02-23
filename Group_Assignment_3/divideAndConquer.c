@@ -135,8 +135,79 @@ struct closestToZero methodOne(int *array, int start, int end){
 }
 
 //method 2
-//struct closestToZero methorTwo(int *array, int start, int end){
-//}
+struct closestToZero methodTwo(int *array, int start, int end){
+
+	int divide; 
+	int sum;
+	struct closestToZero temp, smallest;
+	int i, j, l, r;
+	struct method *suffixSum, *prefixSum;
+	divide = (start + end + 1)/2;
+	//printf("Divide: %d\n", divide);
+
+	suffixSum = malloc((divide - start)*sizeof(struct method));
+	prefixSum = malloc((end - (divide - 1))*sizeof(struct method));
+
+		//sum the two arrays
+	for(i = divide - 1; i >= 0; i--){
+		if(i == divide - 1){
+			suffixSum[i].sum = array[start + i];
+			suffixSum[i].position = start + i;
+		}
+		else{
+			suffixSum[i].sum = suffixSum[i + 1].sum + array[start + i];
+			suffixSum[i].position = start + i;
+		}
+	}
+
+	for(i = 0; i < end - (divide - 1); i++){
+		if(i == 0){
+			prefixSum[i].sum = array[divide + i];
+			prefixSum[i].position = divide + i;
+		}
+		else{
+			prefixSum[i].sum = prefixSum[i - 1].sum + array[divide + i];
+			prefixSum[i].position = divide + i;
+		}
+	}
+
+	bubblesort(suffixSum,divide);
+	bubblesort(prefixSum,end - (divide - 1));
+
+
+	l = 0; r = end - divide;
+    smallest.closest = prefixSum[r].sum + suffixSum[l].sum;
+
+	while(l < r){
+        sum = suffixSum[l].sum + prefixSum[r].sum;
+        if(abs(sum) < abs(smallest.closest))
+        {
+            smallest.closest = sum;
+            smallest.i = l;
+            smallest.j = r;
+        }
+        if(sum < 0)
+            l++;
+        else
+            r--;
+    }
+	printf("%d i:%d j:%d\n", smallest.closest, smallest.i ,smallest.j);
+    return smallest;
+}
+
+void bubblesort(struct method *arr, int length){
+	struct method temp;
+	int i, j;
+	for(i = 0; i < length-1; i++){
+		for(j = 0; j < length-i-1; j++){
+			if(arr[j].sum > arr[j+1].sum){
+				temp = arr[j];
+				arr[j] = arr[j+1];
+				arr[j+1] = temp;
+			}
+		}
+	}
+}
 
 //method 3
 struct closestToZero methodThree(int *array, int start, int end){
