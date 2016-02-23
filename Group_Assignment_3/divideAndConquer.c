@@ -1,11 +1,10 @@
 #include "myLibrary.h"
 
 int main(){
-	int array[] = {31, -41, 59, 26, -53, 58, -6, 97, -93, -23};
-
+	int array[] = {498671, -159612, 172067, 367095, -450520, 160060, 429766, 95681, 440449, 194774, -294374, 455483, -250387, 488891, -478708, 412076, -135339, -490317, 347356, -250773, -206039, -390013, -221854, -177484, 5339, 366700, -426507, -386674, 80689, -58293, -280145, 195230, 411132, -23406, 173655, -332329, 484655, -342933, -325278, -432448, -426540, -462414, 112604, 319403, 328291, -166122, 122286, -252549, -489098, -13418, 482563, 156249, -251165, -332449, -165171, -125634, 123436, 161417, 495151, -1886, 483228, -25738, 292159, 54856, 211061, 200338, 447276, -371663, -175857, 231851, -405944, -429147, 414150, 437494, -48022, -476189, 413141, -154967, -408523, 63471, -220470, 130745, -25280, -475969, 13469, -167430, -53864, -99891, 116323, 354332, 32683, 132157, -316695, 417480, -319800, 5557, -227929, 74911, -342771, -357566};
 	int arrayLength = (int)sizeof(array)/sizeof(int);
 
-	printf("%d\n", arrayLength);
+	printf("%d unit\n", arrayLength);
 
 	struct closestToZero result;
 	result = find(array, 0, arrayLength-1);
@@ -63,15 +62,16 @@ struct closestToZero min(struct closestToZero suffix, struct closestToZero prefi
 		temp = prefix;
 
 	if(combine.closest < temp.closest){
-		printf("%d\n", combine.closest);
+		//printf("%d\n", combine.closest);
 		return combine;
 	}else{
-		printf("%d\n", temp.closest);
+		//printf("%d\n", temp.closest);
 		return temp;
 	}
 }
 
-struct closestToZero method(int *array, int start, int end){
+struct closestToZero methodOne(int *array, int start, int end){
+	//printf("i = %d, j = %d", start, end);
 	int divide;
 	struct closestToZero temp, smallest;
 	int i, j;
@@ -80,18 +80,18 @@ struct closestToZero method(int *array, int start, int end){
 
 	//printf("Divide: %d\n", divide);
 
-	suffixSum = malloc((divide - start)*sizeof(struct method));
-	prefixSum = malloc((end - (divide - 1))*sizeof(struct method));
+	suffixSum = malloc((divide - start)*sizeof(struct method*));
+	prefixSum = malloc((end - (divide - 1))*sizeof(struct method*));
 
 	//sum the two arrays
-	for(i = divide - 1; i >= 0; i--){
+	for(i = divide - 1, j = divide - start - 1; i >= start; i--, j--){
 		if(i == divide - 1){
-			suffixSum[i].sum = array[start + i];
-			suffixSum[i].position = start + i;
+			suffixSum[j].sum = array[i];
+			suffixSum[j].position = i;
 		}
 		else{
-			suffixSum[i].sum = suffixSum[i + 1].sum + array[start + i];
-			suffixSum[i].position = start + i;
+			suffixSum[j].sum = suffixSum[j + 1].sum + array[i];
+			suffixSum[j].position = i;
 		}
 
 		//printf("%d ", suffixSum[i].sum);
@@ -126,7 +126,11 @@ struct closestToZero method(int *array, int start, int end){
 			}
 		}
 	}
-	printf("Smallest from method 1: %d\n", smallest.closest);
+	//printf(" Smallest from method 1: %d i = %d, j = %d\n", smallest.closest, smallest.i, smallest.j);
+
+	//free(prefixSum);
+	//free(suffixSum);
+
 	return smallest;
 }
 
@@ -136,9 +140,10 @@ struct closestToZero method(int *array, int start, int end){
 
 //method 3
 struct closestToZero methodThree(int *array, int start, int end){
+	//printf("start: %d, end: %d\n", start, end);
 	int divide;
 	struct closestToZero temp, smallest;
-	int i, j;
+	int i, j, k;
 	struct method *suffixSum, *prefixSum, *combine;
 	divide = (start + end + 1)/2;
 
@@ -146,27 +151,27 @@ struct closestToZero methodThree(int *array, int start, int end){
 
 	suffixSum = malloc((divide - start)*sizeof(struct method));
 	prefixSum = malloc((end - (divide - 1))*sizeof(struct method));
-	combine = malloc((end - start + 1)*sizeof(method));
+	combine = malloc((end - start + 1)*sizeof(struct method));
 
 	//sum the two arrays
-	for(i = divide - 1, j = 0; i >= 0; i--, j++){
+	for(i = divide - 1, j = divide - start -1, k = 0; i >= start; i--, j--, k++){
 		if(i == divide - 1){
-			suffixSum[i].sum = array[start + i];
-			suffixSum[i].position = start + i;
+			suffixSum[j].sum = array[i];
+			suffixSum[j].position = i;
 		}
 		else{
-			suffixSum[i].sum = suffixSum[i + 1].sum + array[start + i];
-			suffixSum[i].position = start + i;
+			suffixSum[j].sum = suffixSum[j + 1].sum + array[i];
+			suffixSum[j].position = i;
 		}
 
-		combine[j].sum = suffixSum[i].sum;
-		combine[j].position = suffixSum[i].position;
-		//printf("%d ", suffixSum[i].sum);
+		combine[k].sum = suffixSum[j].sum;
+		combine[k].position = suffixSum[j].position;
+		//printf("%d i = %d ", suffixSum[i].sum, i);
 	}
 
-	//printf("\n");
+	//printf(" ==> suffixSum\n");
 
-	for(i = 0; i < end - (divide - 1); i++, j++){
+	for(i = 0; i < end - (divide - 1); i++, k++){
 		if(i == 0){
 			prefixSum[i].sum = array[divide + i];
 			prefixSum[i].position = divide + i;
@@ -176,19 +181,25 @@ struct closestToZero methodThree(int *array, int start, int end){
 			prefixSum[i].position = divide + i;
 		}
 
-		prefixSum[i].sum = -prefixSum[i].sum;
+		prefixSum[i].sum = prefixSum[i].sum;
 
-		combine[j].sum = prefixSum[i].sum;
-		combine[j].position = prefixSum[i].position;
+		combine[k].sum = -prefixSum[i].sum;
+		combine[k].position = prefixSum[i].position;
 		//printf("%d ", prefixSum[i].sum);
 	}
 
+	//printf("==> prefixSum, Combine: ");
+
 	sort(combine, end - start + 1);
+	/*for(i = 0; i < end - start + 1; i++){
+		printf("%d ", combine[i].sum);
+	}
+	printf("\n");*/
 
 	smallest.closest = 1000000;
 
 	for(i = 0; i < end - start; i++){
-		temp.closest = combine[i].sum + combine[i+1].sum;
+		temp.closest = abs(combine[i].sum - combine[i+1].sum);
 		temp.i = combine[i].position;
 		temp.j = combine[i+1].position;
 
@@ -196,6 +207,12 @@ struct closestToZero methodThree(int *array, int start, int end){
 			smallest = temp;
 		}
 	}
+
+	//printf("check 1 smallest: %d\n", smallest.closest);
+
+	//free(combine);
+	//free(prefixSum);
+	//free(suffixSum);
 
 	return smallest;
 }
@@ -205,7 +222,7 @@ void sort(struct method *combine, int length){
 	int i, j;
 
 	for(i = 1; i < length; i++){
-		for(j = i; j>= 0; j--){
+		for(j = i; j > 0; j--){
 			if(combine[j].sum < combine[j-1].sum){
 				temp = combine[j-1];
 				combine[j-1] = combine[j];
